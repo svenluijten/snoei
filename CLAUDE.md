@@ -16,3 +16,7 @@ Go CLI that lists and removes local branches and worktrees whose remote branch i
 - The interactive picker is passed into `cli.Run` as a `cli.Picker` function, so CLI tests replace it with a plain function. Keep TTY code in `internal/picker`, which has no tests.
 - Exit codes: 0 success, 1 runtime or git error, 2 usage error.
 - An item with `Skip` set is never removed, not even with `--force`.
+
+## Releasing
+
+Push a `v*` tag (for example `git tag v0.1.0 && git push origin v0.1.0`). `.github/workflows/release.yml` runs the tests, then GoReleaser publishes darwin and linux binaries (amd64 and arm64) to a GitHub release.
