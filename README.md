@@ -19,7 +19,13 @@ Run `snoei` without flags to pick what to remove from a list.
 
 ## Installation
 
-Download a binary from the [releases page](https://github.com/svenluijten/snoei/releases), or use the GitHub CLI:
+With Homebrew (macOS and Linux):
+
+```
+brew install svenluijten/tap/snoei
+```
+
+Or download a binary from the [releases page](https://github.com/svenluijten/snoei/releases), or use the GitHub CLI:
 
 ```
 gh release download -R svenluijten/snoei -p 'snoei_darwin_arm64.tar.gz' -O - | tar xz -C ~/.local/bin snoei
