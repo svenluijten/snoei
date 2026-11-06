@@ -28,3 +28,20 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+homebrew_casks:
+  - name: snoei
+    repository:
+      owner: svenluijten
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/svenluijten/snoei
+    description: Remove local branches and worktrees that were already merged on GitHub
+    license: MIT
+    hooks:
+      post:
+        # The binary is not notarized, so macOS would otherwise refuse to run it.
+        install_steps: |
+          on_macos do
+            run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/snoei"]
+          end
