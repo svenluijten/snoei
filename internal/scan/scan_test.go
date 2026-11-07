@@ -56,6 +56,51 @@ func TestScanMarksDirtyWorktrees(t *testing.T) {
 	assertItems(t, items, want)
 }
 
+func TestScanMarksWorktreeWithCommitsAfterMergeAsDirty(t *testing.T) {
+	r := testrepo.New(t)
+	wt := r.Worktree("feature/more")
+	r.Merge("feature/more")
+	r.Commit(wt, "after merge")
+
+	items, err := scan.Scan(r.Dir, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []scan.Item{{Branch: "feature/more", Type: scan.TypeWorktree, Path: wt, Dirty: true}}
+	assertItems(t, items, want)
+}
+
+func TestScanMarksBranchWithCommitsAfterMergeAsDirty(t *testing.T) {
+	r := testrepo.New(t)
+	r.Branch("feature/more")
+	r.Merge("feature/more")
+	r.Git(r.Dir, "update-ref", "refs/heads/feature/more", r.Git(r.Dir, "commit-tree", "-p", "feature/more", "-m", "after merge", "main^{tree}"))
+
+	items, err := scan.Scan(r.Dir, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []scan.Item{{Branch: "feature/more", Type: scan.TypeBranch, Dirty: true}}
+	assertItems(t, items, want)
+}
+
+func TestScanDoesNotMarkBranchBehindRemoteAsDirty(t *testing.T) {
+	r := testrepo.New(t)
+	wt := r.Worktree("feature/behind")
+	r.Git(wt, "reset", "--hard", "HEAD~1")
+	r.Merge("feature/behind")
+
+	items, err := scan.Scan(r.Dir, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []scan.Item{{Branch: "feature/behind", Type: scan.TypeWorktree, Path: wt}}
+	assertItems(t, items, want)
+}
+
 func TestScanSkipsBranchCheckedOutInMainWorktree(t *testing.T) {
 	r := testrepo.New(t)
 	r.Branch("feature/current")

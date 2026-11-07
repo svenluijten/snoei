@@ -41,7 +41,7 @@ Flags:
   --json       print as JSON (with --list)
   -y, --yes    remove all clean merged branches without the picker
   --dry-run    show what would be removed
-  --force      also remove items with uncommitted changes (with --yes)
+  --force      also remove items with uncommitted changes or unpushed commits (with --yes)
   --no-fetch   skip "git fetch --prune"
 `
 
@@ -176,7 +176,7 @@ func removeAll(items []scan.Item, opts options, env Env) int {
 			continue
 		}
 		if item.Dirty && !opts.force {
-			fmt.Fprintf(env.Stdout, "skipped %s: has uncommitted changes (use --force)\n", item.Branch)
+			fmt.Fprintf(env.Stdout, "skipped %s: has uncommitted changes or unpushed commits (use --force)\n", item.Branch)
 			continue
 		}
 		if !removeOne(item, opts.dir, opts.force, opts.dryRun, env) {
