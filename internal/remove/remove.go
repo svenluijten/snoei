@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrDirty   = errors.New("has uncommitted changes")
+	ErrDirty   = errors.New("has uncommitted changes or unpushed commits")
 	ErrSkipped = errors.New("cannot be removed")
 )
 

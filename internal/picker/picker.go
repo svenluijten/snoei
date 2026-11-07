@@ -40,7 +40,7 @@ func Pick(items []scan.Item) ([]scan.Item, error) {
 
 	confirmed := false
 	err = huh.NewConfirm().
-		Title(fmt.Sprintf("%d selected worktree(s) have uncommitted changes. Delete them anyway?", dirty)).
+		Title(fmt.Sprintf("%d selected item(s) have uncommitted changes or unpushed commits. Delete them anyway?", dirty)).
 		Affirmative("Delete").
 		Negative("Keep them").
 		Value(&confirmed).

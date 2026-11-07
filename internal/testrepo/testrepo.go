@@ -72,10 +72,11 @@ func (r *Repo) Worktree(name string) string {
 	return path
 }
 
-// Merge simulates a merged pull request: the remote branch is deleted and pruned locally.
+// Merge simulates a merged pull request: the branch is deleted on the remote only, so the
+// clone keeps its remote-tracking ref until the next "git fetch --prune".
 func (r *Repo) Merge(name string) {
 	r.t.Helper()
-	r.Git(r.Dir, "push", "origin", "--delete", name)
+	r.Git(r.Remote, "branch", "-D", name)
 }
 
 func (r *Repo) Dirty(dir string) {

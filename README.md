@@ -11,7 +11,7 @@ worktree  feature/search      folder missing  /Users/me/Code/app.feature-search
 
 $ snoei --yes
 removed branch fix/login-redirect
-skipped feature/invoices: has uncommitted changes (use --force)
+skipped feature/invoices: has uncommitted changes or unpushed commits (use --force)
 removed worktree feature/search (/Users/me/Code/app.feature-search)
 ```
 
@@ -53,7 +53,7 @@ snoei [path] [flags]
 | `--json`     | Print as JSON (with `--list`)                              |
 | `-y, --yes`  | Remove all clean merged branches without the picker        |
 | `--dry-run`  | Show what would be removed                                 |
-| `--force`    | Also remove items with uncommitted changes (with `--yes`)  |
+| `--force`    | Also remove items with uncommitted changes or unpushed commits (with `--yes`) |
 | `--no-fetch` | Skip `git fetch --prune`                                   |
 
 Without a terminal (in scripts or CI), pass `--list` or `--yes`.
@@ -66,7 +66,7 @@ Removing a worktree runs `git worktree remove`, then `git branch -D`.
 
 ## Safety
 
-- Worktrees with uncommitted changes are kept unless you pass `--force`, or confirm a second prompt in the picker.
+- Worktrees with uncommitted changes, and branches with commits that were never pushed before the remote branch was deleted, are kept unless you pass `--force`, or confirm a second prompt in the picker. Unpushed commits are only detected when snoei runs the fetch itself, so not with `--no-fetch` or after another `git fetch --prune`.
 - The branch checked out in the main worktree, and the worktree you run snoei from, are never removed.
 - A branch whose pull request was closed without merging also has its remote branch deleted, so it is listed too. Check the list or use `--dry-run` first.
 
